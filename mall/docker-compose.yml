@@ -1,0 +1,184 @@
+version: "3.8"
+
+name: mall
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-mall}
+      TZ: ${TZ:-Asia/Shanghai}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+    networks:
+      mall:
+        aliases: [db]
+
+  redis:
+    image: redis:7
+    container_name: redis
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      mall:
+        aliases: [redis]
+
+  rabbitmq:
+    image: rabbitmq:3.9.11-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-guest}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-guest}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      mall:
+        aliases: [rabbit]
+
+  elasticsearch:
+    image: elasticsearch:7.17.3
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - cluster.name=elasticsearch
+      - ES_JAVA_OPTS=-Xms${ES_JAVA_XMS:-512m} -Xmx${ES_JAVA_XMX:-1024m}
+      - TZ=${TZ:-Asia/Shanghai}
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+      - es-plugins:/usr/share/elasticsearch/plugins
+    networks:
+      mall:
+        aliases: [es]
+
+  kibana:
+    image: kibana:7.17.3
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es:9200
+    ports:
+      - "5601:5601"
+    networks:
+      mall:
+        aliases: [kibana]
+
+  mongo:
+    image: mongo:4
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      mall:
+        aliases: [mongo]
+
+  # Optional: minio for object storage used by parts of the app
+  minio:
+    image: minio/minio
+    container_name: minio
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    ports:
+      - "9090:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+    networks:
+      mall:
+        aliases: [minio]
+
+  mall-admin:
+    build:
+      context: ./mall-admin
+    image: mall/mall-admin:local
+    container_name: mall-admin
+    environment:
+      - TZ=${TZ:-Asia/Shanghai}
+      - SPRING_PROFILES_ACTIVE=prod
+      - JAVA_OPTS=
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    volumes:
+      - mall-admin-logs:/var/logs
+    networks:
+      mall:
+        aliases: [mall-admin]
+
+  mall-search:
+    build:
+      context: ./mall-search
+    image: mall/mall-search:local
+    container_name: mall-search
+    environment:
+      - TZ=${TZ:-Asia/Shanghai}
+      - SPRING_PROFILES_ACTIVE=prod
+      - JAVA_OPTS=
+    ports:
+      - "8081:8081"
+    depends_on:
+      - elasticsearch
+      - mysql
+    volumes:
+      - mall-search-logs:/var/logs
+    networks:
+      mall:
+        aliases: [mall-search]
+
+  mall-portal:
+    build:
+      context: ./mall-portal
+    image: mall/mall-portal:local
+    container_name: mall-portal
+    environment:
+      - TZ=${TZ:-Asia/Shanghai}
+      - SPRING_PROFILES_ACTIVE=prod
+      - JAVA_OPTS=
+    ports:
+      - "8085:8085"
+    depends_on:
+      - redis
+      - mongo
+      - mysql
+      - rabbitmq
+    volumes:
+      - mall-portal-logs:/var/logs
+    networks:
+      mall:
+        aliases: [mall-portal]
+
+networks:
+  mall:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  redis-data:
+  es-data:
+  es-plugins:
+  rabbitmq-data:
+  mongo-data:
+  minio-data:
+  mall-admin-logs:
+  mall-portal-logs:
+  mall-search-logs:
