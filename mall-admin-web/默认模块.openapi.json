@@ -1,0 +1,276 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "默认模块",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [],
+  "paths": {
+    "/member/list": {
+      "get": {
+        "summary": "会员列表",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE3NjA0NTE4MTc2NDAsImV4cCI6MTc2MTA1NjYxN30.8y93j9sjUWevkaJ8V39vxWvLnKe5c1i4p-vXAkq0S63TN6U5kKpb8a5FftYLDXM9JQ6C_-lpYo3sPmRYfFeELA",
+            "schema": {
+              "type": "string"
+            } 
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/member/create": {
+      "post": {
+        "summary": "创建会员",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE3NjA0NTE4MTc2NDAsImV4cCI6MTc2MTA1NjYxN30.8y93j9sjUWevkaJ8V39vxWvLnKe5c1i4p-vXAkq0S63TN6U5kKpb8a5FftYLDXM9JQ6C_-lpYo3sPmRYfFeELA",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "username": "testuser2023",
+              "password": "Pa$$w0rd!",
+              "nickname": "数码达人小张",
+              "phone": "13800138000",
+              "status": 1,
+              "icon": "https://cdn.example.com/avatars/2023/01.jpg",
+              "gender": 1,
+              "birthday": "1995-08-20",
+              "city": "上海市",
+              "job": "全栈工程师",
+              "personalizedSignature": "热爱科技与生活的极客玩家",
+              "sourceType": 2,
+              "memberLevelId": 3,
+              "schema": {
+                "type": "object",
+                "properties": {},
+                "required": [
+                  "01K7KBGPV5XPGDS152SGM4Z0RR"
+                ]
+              },
+              "examples": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/member/update/{id}": {
+      "post": {
+        "summary": "修改会员信息",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "12",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE3NjA0NTE4MTc2NDAsImV4cCI6MTc2MTA1NjYxN30.8y93j9sjUWevkaJ8V39vxWvLnKe5c1i4p-vXAkq0S63TN6U5kKpb8a5FftYLDXM9JQ6C_-lpYo3sPmRYfFeELA",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              },
+              "examples": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/member/delete": {
+      "post": {
+        "summary": "批量删除会员",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": [
+              "12，13"
+            ],
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE3NjA0NTE4MTc2NDAsImV4cCI6MTc2MTA1NjYxN30.8y93j9sjUWevkaJ8V39vxWvLnKe5c1i4p-vXAkq0S63TN6U5kKpb8a5FftYLDXM9JQ6C_-lpYo3sPmRYfFeELA",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/member/updateStatus/{id}": {
+      "post": {
+        "summary": "修改会员状态",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "17",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE3NjA0NTE4MTc2NDAsImV4cCI6MTc2MTA1NjYxN30.8y93j9sjUWevkaJ8V39vxWvLnKe5c1i4p-vXAkq0S63TN6U5kKpb8a5FftYLDXM9JQ6C_-lpYo3sPmRYfFeELA",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              },
+              "examples": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "securitySchemes": {}
+  },
+  "servers": [],
+  "security": []
+}
